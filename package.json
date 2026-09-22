@@ -1,0 +1,10 @@
+{
+  "name": "canvas-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal local dashboard for Canvas LMS: upcoming assignments, courses, grades and grading schemes.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

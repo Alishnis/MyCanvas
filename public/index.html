@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>◎</text></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/upcoming">◎ <span class="brand-text">Canvas</span></a>
+      <nav class="tabs" id="tabs">
+        <a href="#/upcoming" data-view="upcoming">Upcoming</a>
+        <a href="#/semester" data-view="semester">Semester</a>
+        <a href="#/grading" data-view="grading">Grading</a>
+        <a href="#/courses" data-view="courses">Courses</a>
+        <a href="#/inbox" data-view="inbox">Inbox</a>
+      </nav>
+      <div class="topbar-right">
+        <span class="who" id="who"></span>
+        <button class="ghost" id="refresh" title="Reload from Canvas">Refresh</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="view" class="container"></main>
+
+  <footer class="container foot">
+    <span id="foot-note"></span>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
