@@ -5,6 +5,7 @@
   "description": "Minimal local dashboard for Canvas LMS: upcoming assignments, courses, grades and grading schemes.",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test"
   }
 }
