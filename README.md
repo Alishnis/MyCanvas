@@ -2,9 +2,26 @@
 
 A minimalist, read-only dashboard over the Canvas LMS API ([canvas.cityu.edu.hk](https://canvas.cityu.edu.hk)) — upcoming assignments, a full-semester schedule, per-course grading breakdowns, course materials and messages, all in one place, so opening Canvas itself becomes optional.
 
+[![CI](https://github.com/Alishnis/MyCanvas/actions/workflows/ci.yml/badge.svg)](https://github.com/Alishnis/MyCanvas/actions/workflows/ci.yml)
+
 Zero dependencies, no build step, no data leaves the machine it runs on.
 
 **Live demo:** https://mycanvas-app-tmpalish.azurewebsites.net (behind a login — see [Demo](#demo))
+
+## Quick start
+
+Requires Node.js 18+ (the server uses the global `fetch`) and a Canvas personal access token.
+
+```bash
+git clone https://github.com/Alishnis/MyCanvas.git
+cd MyCanvas
+cp .env.example .env      # paste your token into CANVAS_TOKEN= (set CANVAS_BASE if not CityU)
+npm start                 # same as: node server.js
+```
+
+Open <http://localhost:5173>. Without a token the UI shows a setup screen instead of data. There is nothing to `npm install`.
+
+Configuration is read from `.env` or real environment variables: `CANVAS_BASE`, `CANVAS_TOKEN`, `PORT`, `HOST`, `BASIC_AUTH_USER`, `BASIC_AUTH_PASS` (see [`.env.example`](.env.example)).
 
 ## Screenshots
 
@@ -176,8 +193,30 @@ az webapp restart -g mycanvas-rg -n mycanvas-app-tmpalish
 - Zero runtime dependencies keep the Docker image small (~90 MB compressed) and the attack surface minimal.
 - Runs both fully local (bound to `127.0.0.1`, nothing else on the network can reach it) and as a public container behind Basic Auth, from the same unmodified codebase.
 
+## Tests
+
+```bash
+npm test
+```
+
+`test/smoke.test.js` (Node's built-in `node:test`, no dependencies) boots the real `server.js` against a fake local Canvas API and checks: token is attached server-side and never returned to the browser, pagination is followed, responses are cached, Canvas errors are mapped to hints, malformed API paths and path traversal are rejected, Basic Auth gates every route, and the pure helpers in `public/lib/util.js`. It makes no network calls and needs no real token. The same command runs in CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
+There are no automated tests for the browser UI (`public/views/*`) or the HTML sanitiser, which needs a DOM.
+
 ## Notes
 
 - Teaching weeks are anchored by hand in `public/lib/util.js` (`WEEK1_MONDAY`) — Canvas only exposes the term's administrative start, three weeks before classes actually begin.
 - Anything scheduled outside Canvas — a Moodle quiz, an exam timetable, a date announced only in a lecture — is invisible here; the Semester view says so.
 - Revoke access anytime at <https://canvas.cityu.edu.hk/profile/settings> — it stops the token working immediately.
+
+## Limitations
+
+- Read-only by design: no submitting, replying or posting.
+- Defaults to CityU's Canvas (`canvas.cityu.edu.hk`); other instances can be set with `CANVAS_BASE`, but the course/grading handling and the hand-set `WEEK1_MONDAY` (Semester A 2026/27) are written around CityU's setup.
+- Single user: one token per running instance. The in-memory cache is per process and lost on restart.
+- Basic Auth is the only access control for a public deployment.
+
+## License
+
+No `LICENSE` file is present in this repository, so by default all rights are reserved.
+<!-- TODO(owner): confirm the intended license (MIT?) and add a LICENSE file. -->
